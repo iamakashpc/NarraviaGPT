@@ -3,13 +3,22 @@
 import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { checkValidData } from "../utils/validate";
-import {  createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword,
+	updateProfile,
+} from "firebase/auth";
 
 import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
 	const [isSignInForm, setIsSignInForm] = useState(true);
 	const [errorMessage, setErrorMessage] = useState(null);
+	const navigate = useNavigate();
+	 const dispatch = useDispatch();
 
 	const name = useRef(null);
 	const email = useRef(null);
@@ -24,7 +33,6 @@ const Login = () => {
 		setErrorMessage(message);
 		if (message) return;
 
-		
 		if (isSignInForm) {
 			// Implement sign-in logic here
 
@@ -36,7 +44,8 @@ const Login = () => {
 				.then((userCredential) => {
 					// Signed in
 					const user = userCredential.user;
-					console.log(user)
+					console.log(user);
+					navigate("/browse");
 					// ...
 				})
 				.catch((error) => {
@@ -44,7 +53,6 @@ const Login = () => {
 					const errorMessage = error.message;
 					setErrorMessage(errorMessage);
 				});
-			
 		} else {
 			createUserWithEmailAndPassword(
 				auth,
@@ -54,7 +62,25 @@ const Login = () => {
 				.then((userCredential) => {
 					// Signed up
 					const user = userCredential.user;
-					console.log(user);
+					updateProfile(user, {
+						displayName: name.current.value,
+						photoURL: "https://avatars.githubusercontent.com/u/148070752?v=4",
+					})
+						.then(() => {
+							navigate("/browse");
+							 const { uid, email, displayName, photoURL } = auth.currentUser;
+							   dispatch(
+										addUser({
+											uid: uid,
+											email: email,
+											displayName: displayName,
+											photoURL: photoURL,
+										})
+									);
+						})
+						.catch((error) => {
+							setErrorMessage(error.message);
+						});
 					// Additional logic after successful sign up
 				})
 				.catch((error) => {
@@ -62,7 +88,6 @@ const Login = () => {
 					console.error(error.code, errorMessage);
 					setErrorMessage(errorMessage);
 				});
-			
 		}
 	};
 
