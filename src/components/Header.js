@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { addUser, removeUser } from "../utils/userSlice";
+import { USER_AVATAR } from "../utils/constant";
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Header = () => {
 	};
 
 	useEffect(() => {
-		onAuthStateChanged(auth, (user) => {
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			if (user) {
 				const { uid, email, displayName, photoURL } = user;
 				dispatch(
@@ -41,15 +42,16 @@ const Header = () => {
 				navigate("/");
 			}
 		});
+		 return () => unsubscribe();
 	}, []);
 
 	return (
-		<div className="absolute px-8 py-2 bg-gradient-to-b from-black z-10">
-			<div className="w-screen m-3 flex justify-between">
-				<img src={narravia} className="w-44 m-3" alt="Narravia Logo" />
+		<div className="absolute  flex-auto  py-4 bg-gradient-to-b from-black z-10">
+			<div className="w-screen px-6 my- flex justify-between">
+				<img src={narravia} className="w-40 m-1" alt="Narravia Logo" />
 				{user && (
-					<div className="flex p-2 items-center">
-						
+					<div className="flex  items-center">
+						<img className="w-8 m-2" src={USER_AVATAR}></img>
 						<button
 							onClick={handleSignOut}
 							className="font-bold text-red-800 ml-2 rounded-lg"
