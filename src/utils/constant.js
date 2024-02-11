@@ -24,4 +24,4 @@ export const SUPPORTED_LANGUAGES = [
 
 
 
-export const OPENAI_KEY = "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";
+export const OPENAI_KEY = "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";

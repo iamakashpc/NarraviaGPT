@@ -58,9 +58,9 @@ const Header = () => {
 	};
 
 	return (
-		<div className="absolute  flex-auto  py-4 bg-gradient-to-b from-black z-10">
-			<div className="w-screen px-6 my- flex justify-between mr-0">
-				<img src={narravia} className="w-40 m-1 py-0" alt="Narravia Logo" />
+		<div className="absolute  flex-auto  py-4 bg-gradient-to-b from-black z-10 ">
+			<div className="w-screen px-6 my- flex justify-between">
+				<img src={narravia} className="w-40 m-1 mr-0" alt="Narravia Logo" />
 				{user && (
 					<div className="flex  items-center">
 						{showGptSearch && (
@@ -84,7 +84,7 @@ const Header = () => {
 						<img  alt=""className="w-8 m-2 cursor-pointer" src={USER_AVATAR}></img>
 						<button
 							onClick={handleSignOut}
-							className="font-bold text-red-800 ml-2 mr-12 text-white rounded-lg"
+							className="md:font-bold text-red-800 ml-2 mr-12 text-white rounded-lg"
 						>
 							Sign Out
 						</button>
